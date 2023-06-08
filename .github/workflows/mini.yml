@@ -9,9 +9,7 @@ name: mini
 on:
   repository_dispatch:
   workflow_dispatch:
-  push:
-    branches: 
-      - master
+
 
 
 env:
@@ -45,7 +43,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           ref: master
 
@@ -172,19 +170,19 @@ jobs:
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
       - name: Deliver buildinfo
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: OpenWrt_buildinfo
           path: ./artifact/buildinfo/
 
       - name: Deliver package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: OpenWrt_package
           path: ./artifact/package/
 
       - name: Deliver firmware
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: OpenWrt_firmware
           path: ./bin/targets/
