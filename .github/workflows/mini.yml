@@ -27,8 +27,8 @@ env:
   TZ: Asia/Shanghai
 
 
-permissions:
-  contents: read
+#permissions:
+#  contents: read
 
 jobs:
 
@@ -58,22 +58,8 @@ jobs:
           sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc-s1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf swig libtinfo5
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
-          # sudo mkdir -p -m 777 /mnt/openwrt/bin /mnt/openwrt/build_dir/host /mnt/openwrt/build_dir/hostpkg /mnt/openwrt/dl /mnt/openwrt/feeds /mnt/openwrt/staging_dir
-          # ln -s /mnt/openwrt/bin ./bin
-          # mkdir -p ./build_dir
-          # ln -s -f /mnt/openwrt/build_dir/host ./build_dir/host
-          # ln -s -f /mnt/openwrt/build_dir/hostpkg ./build_dir/hostpkg
-          # ln -s /mnt/openwrt/dl ./dl
-          # ln -s /mnt/openwrt/feeds ./feeds
-          # ln -s /mnt/openwrt/staging_dir ./staging_dir
-          df -h
-    
-      - name: 自定义插件
-        run: |
-          cd package
-          mkdir packages
-          cd packages
-          git clone https://github.com/xiaorouji/openwrt-passwall.git
+      
+
       - name: Update feeds
         run: |
           #sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
@@ -105,26 +91,22 @@ jobs:
           #CONFIG_PACKAGE_luci-app-openvpn=y
           #CONFIG_PACKAGE_luci-app-wolplus=y
           #CONFIG_PACKAGE_luci-app-ddns-go=y
-          EOF
-          #################################
-          # 编译x64固件:
-          cat >> .config <<EOF
+
+          # 编译固件:
+  
           CONFIG_TARGET_ramips=y
           CONFIG_TARGET_ramips_mt7620=y
           CONFIG_TARGET_ramips_mt7620_DEVICE_xiaomi_miwifi-mini=y
           
           CONFIG_HAS_TESTING_KERNEL=y
           CONFIG_TESTING_KERNEL=y
-          CONFIG_LINUX_6_1=y
+          CONFIG_LINUX_4_14=y
           #CONFIG_TARGET_x86=y
           #CONFIG_TARGET_x86_64=y
           #CONFIG_TARGET_x86_64_Generic=y         
           
           # wifi:
-          #CONFIG_PACKAGE_kmod-cfg80211=y
-          #CONFIG_PACKAGE_kmod-mac80211=y
-          #CONFIG_PACKAGE_MAC80211_DEBUGFS=y
-          #CONFIG_PACKAGE_MAC80211_MESH=y
+
           CONFIG_PACKAGE_kmod-mt76-core=y
           CONFIG_PACKAGE_kmod-mt76x02-common=y
           CONFIG_PACKAGE_kmod-mt76x2=y
@@ -141,7 +123,6 @@ jobs:
           CONFIG_PACKAGE_ipv6helper=y
           EOF
           # ========================固件定制部分结束========================
-          # ===============================================================
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
      
